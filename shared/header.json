@@ -1,0 +1,7 @@
+{
+    "__comment" : "Header includes for html files.",
+    "index.js" : {
+        "styles": [ "bootstrap.min.css", "default.css" ],
+        "scripts": [ "bootstrap.min.js", { "url" : "http://codeorigin.jquery.com/jquery-1.10.2.min.js" }, "default.js"  ]   
+    }
+}
