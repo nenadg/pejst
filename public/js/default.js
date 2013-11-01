@@ -1,40 +1,48 @@
-var texts, currentLine, currentRows;
+;(function(){
 
-$(document).ready(function(){
-    currentRows = $("textarea").attr('rows');
-    //texts = $("textsarea").val();
+    var chars, lines, words, rows, line, textarea, text, word;
+    var events = [ 'keyup', 'keydown', 'keypress' ];
     
-    //currentLine = (!currentString)? 1: currentString.match(/\n/g).length;
-    
-    $("#chars").append(0);
-    $("#lines").append(1);
-    
-    $("textarea").bind('keydown keyup mouseenter mouseleave', stuff);
-    
+    function e(elem, attr, val){
+        var element = document.getElementsByTagName(elem)[0] || document.getElementById(elem);
+        
+        if(element)
+            if(attr)
+                if(val)
+                    element.setAttribute(attr, val);
+                else
+                    return element.getAttribute(attr);
+            else   
+                return element;
+        else
+            throw new Error('moo...')
+    }
 
-});
+    function count(){
+        text = textarea.value;
+        line = (text.match(/\n/g) != null)? text.match(/\n/g).length + 1 : 1;
+        word = (text.match(/\S+/g) != null)? text.match(/\S+/g).length : 0;
+        
+        chars.innerHTML = text.length || 0;
+        lines.innerHTML = line || 1;
+        words.innerHTML = word || 0;   
 
-function stuff(){
+        if((line + 1) >= rows || ((rows -2) >= line && rows > 19))
+            e('textarea', 'rows', line + 2);
+    }
     
-        texts = $("textarea").val();
-             
-        currentLine = (texts.match(/\n/g) != null)? texts.match(/\n/g).length + 1 : 1;
+    return setTimeout(function(){
+
+        textarea = e('textarea');
+        chars = e('chars');
+        lines = e('lines');
+        words = e('words');  
+        rows = e('textarea', 'rows');   
         
-        $("#chars").html(texts.length || 0);        
-        $("#lines").html(currentLine);
+        for(var event in events)
+            e('textarea').addEventListener(events[event], count, false);  
         
-        
-        if ((currentLine +1) >= currentRows){
-            currentRows = currentLine + 2;
-            $("textarea").attr('rows', parseInt(currentRows));
-            
-            
-            //var newheight = $("textarea").height($("textarea").height() + 40);
-            //$("textarea").css('height', newheight);
-        } else if((currentRows -2) >= currentLine && currentRows > 19) {
-        
-           currentRows = currentLine + 2;
-           $("textarea").attr('rows', parseInt(currentRows));
-        }
-        
-}
+        count();
+    }, 100);
+
+})();

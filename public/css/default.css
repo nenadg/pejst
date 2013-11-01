@@ -1,7 +1,9 @@
 
+body { overflow: hidden; }
 .digitized { background-color: #efefef; padding: .6em; color: #fff; border-top: solid .5em #fff; color: #44af00 }
 .digitized strong { font-weight: normal; display: block; float: left; margin-bottom: .3em }
 .digitized textarea { resize: none; border: solid .1em #dfdfdf; height: auto; border-radius: 0; font-size: .9em; transition: height .5s;
--webkit-transition: height .5s; /* Safari */ -moz-transition: height .5s; }
+-webkit-transition: height .5s; /* Safari */ -moz-transition: height .5s; padding-left: 3em; }
 .digitized .counters { float: right; font-size: .8em; }
+.digitized textarea ol { background-color: #000; }
 input:focus, textarea:focus, select:focus { border: 1px solid #fff !important; -webkit-box-shadow: 0 0 1em #fff !important; -moz-box-shadow: 0 0 1em #fff !important; box-shadow: 0 0 1em #fff !important; }
