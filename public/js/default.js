@@ -1,9 +1,16 @@
+// IE trickery PARTIALLY included, expect errors!
+
 ;(function(){
+    "use strict";
     
-    var chars, lines, words, rows, cols, line, textarea, text, word, ulist, list;
-    var events = [ 'keyup', 'keydown', 'keypress' ];
+    var chars, lines, words, rows, cols, line, textarea, text, word, ul, li;
+    var event = (window.navigator.userAgent.match(/chrome/gi))? 'keydown' : 'keypress'; // for some reason chrome doesn't accept keypress for some keys
     
-    function e(elem, attr, val){
+    // _p :: picnic lazy function
+    // pass one attribute - get element
+    // pass two attributes - get element's value
+    // pass three attributes - set element's value
+    function _p(elem, attr, val){
         
         var element = document.getElementsByTagName(elem)[0] || document.getElementById(elem);
         
@@ -16,38 +23,10 @@
             else   
                 return element;
         else
-            throw new Error('moo...')
-    }
-    
-    function numerate(evt){
-        
-        var caretPosition = text.substr(0, textarea.selectionStart).split("\n").length;
-            
-        // remove highlight when line becomes accessible
-        if(evt.keyCode == '13'){
-            if(list[caretPosition -1].style.backgroundColor != '')
-                list[caretPosition -1].style.backgroundColor = '#efefef'; }
-        
-        // remove line numbers 
-        else if(evt.keyCode == '8' && text.split('\n')[line] == ''){
-            var toRemove = [];
-            
-            // mark unreachable lines (occures when ctrl+a delete, etc.) for deletion
-            for(var item = 0; item <= list.length -1; item++)
-                if(item > (caretPosition -1))
-                    toRemove.push(list[item]);
-            
-            // kill 'em all
-            for(var dead in toRemove)
-                ulist.removeChild(toRemove[dead]);
-            
-            // highligth last (unaccessible) child 
-            if(list.length > line && list.length >1)    
-                ulist.lastChild.style.background = '#dfdfdf';
-        }
+            throw new Error('moo... element "' + elem + '" doesn\'t exist.')
     }
 
-    function count(){
+    function count(e){
         
         text = textarea.value;
         line = (text.match(/\n/g)||[]).length;
@@ -55,33 +34,58 @@
         
         chars.innerHTML = text.length;
         lines.innerHTML = line +1;
-        words.innerHTML = word;    
+        words.innerHTML = word;
         
         // add new lines when bottom is reached
         if(line >= rows || ((rows -1) >= line && rows > 19))
-            e('textarea', 'rows', line + 2);    
+            _p('textarea', 'rows', line + 2);
         
         // add numeration according to number of lines
-        while(list.length -1 <= line)
-            ulist.innerHTML += '<li></li>';
+        while(li.length -1 <= line)
+            ul.innerHTML += '<li></li>';
+        
+        if(e){
+            var caretPosition = text.substr(0, textarea.selectionStart).split("\n").length;
+            
+            // remove highlight when line becomes accessible
+            if(e.keyCode === 13){
+                if(li[caretPosition -1].style.backgroundColor != '')
+                    li[caretPosition -1].style.backgroundColor = '#efefef'; }
+            
+            // remove line numbers 
+            else if(e.keyCode === 8 && text.split('\n')[line] == ''){
+                var toRemove = [];
+                
+                // mark unreachable lines (occures when ctrl+a delete, etc.) for deletion
+                for(var item = 0; item <= li.length -1; item++)
+                    if(item > (caretPosition -1))
+                        toRemove.push(li[item]);
+                
+                // kill 'em all
+                for(var dead in toRemove)
+                    ul.removeChild(toRemove[dead]);
+                
+                // highligth last (unaccessible) child 
+                if(li.length > line && li.length >1)    
+                    ul.lastChild.style.background = '#dfdfdf';
+            }
+        }
     }
     
     return setTimeout(function(){
-        
-        textarea = e('textarea');
-        ulist = e('ul');
-        list = ulist.getElementsByTagName('li'); 
-        chars = e('chars');
-        lines = e('lines');
-        words = e('words');  
-        rows = e('textarea', 'rows');
-        cols = e('textarea', 'cols');
+
+        textarea = _p('textarea');
+        ul = _p('ul');
+        li = ul.getElementsByTagName('li');
+        chars = _p('chars');
+        lines = _p('lines');
+        words = _p('words');
+        rows = _p('textarea', 'rows');
+        cols = _p('textarea', 'cols');
         text = textarea.value;
-        
-        e('textarea').addEventListener('keypress' , function(evt){
-            count(); 
-            (!evt)? numerate(window.event): numerate(evt);
-            
+      
+        textarea.addEventListener(event, function(e){
+            (!e)? count(window.event): count(e);          
         });
 
         count();

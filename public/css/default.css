@@ -5,9 +5,9 @@ body { overflow: hidden; }
 .digitized .content, .digitized .title { display: block; width: 100%; clear: both; }
 .digitized ul { top: 2.7em; position: absolute; padding: 0; margin: 0; width: 1.5em; list-style-position: inside; -webkit-box-shadow: 0 0 .4em #fefefe !important; 
                 -moz-box-shadow: 0 0 .4em #fefefe !important; box-shadow: 0 0 .4em #fefefe !important; margin-left: -1em; }
-.digitized ul li { list-style-type: decimal; font-size: .9em; line-height: 1.41em; font-family: monospace; background-color: #efefef; padding-left: .3em; }
+.digitized ul li { list-style-type: decimal; font-size: 1em; line-height: 1.41em; font-family: monospace; background-color: #efefef; padding-left: .3em; }
 
-.digitized textarea { display: block; resize: none; border: solid .1em #dfdfdf; height: auto; border-radius: 0; font-size: .9em; transition: height .5s;
+.digitized textarea { display: block; resize: none; border: solid .1em #dfdfdf; height: auto; border-radius: 0; font-size: 1em; transition: height .5s;
 -webkit-transition: height .5s; /* Safari */ -moz-transition: height .5s; padding-top: .4em; padding-left: 1.6em; line-height: 1.41em; font-family: monospace; }
 .digitized .counters { float: right; font-size: .8em; }
 
