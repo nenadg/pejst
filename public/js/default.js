@@ -1,15 +1,21 @@
 // IE trickery PARTIALLY included, expect errors!
+"use strict";
 
-;(function(){
-    "use strict";
+document.addEventListener("DOMContentLoaded", function(e){
+    document.removeEventListener( "DOMContentLoaded", e.callee, false );
     
-    var chars, lines, words, rows, cols, line, textarea, text, word, ul, li;
+    app.init();
+});
+        
+var app = (function(){
+ 
+    var chars, lines, words, rows, cols, line, textarea, text, word, ul, li, typing;
     var event = (window.navigator.userAgent.match(/chrome/gi))? 'keydown' : 'keypress'; // for some reason chrome doesn't accept keypress for some keys
     
     // _p :: picnic lazy function
     // pass one attribute - get element
     // pass two attributes - get element's value
-    // pass three attributes - set element's value
+    // pass three attributes - set element's attribute value
     function _p(elem, attr, val){
         
         var element = document.getElementsByTagName(elem)[0] || document.getElementById(elem);
@@ -24,6 +30,17 @@
                 return element;
         else
             throw new Error('moo... element "' + elem + '" doesn\'t exist.')
+    }
+    
+    // generate short hash of text input
+    function hash(t){
+        
+        var ext = t.replace(/[^\w\s]/gi, ''), h = 0, str = '';
+        
+        for (var i = 0; i < ext.length; i++) { h = ext.charCodeAt(i) + ((h << 5) - h) } 
+        
+        return (0x100000000 | (h<<16) | (h<<8) | h).toString(16).slice(1) || '';
+
     }
 
     function count(e){
@@ -44,7 +61,10 @@
         while(li.length -1 <= line)
             ul.innerHTML += '<li></li>';
         
+        // (textarea.offsetWidth - 20) / text.length <= 8.5 : don't forget the resolutions
+                  
         if(e){
+        
             var caretPosition = text.substr(0, textarea.selectionStart).split("\n").length;
             
             // remove highlight when line becomes accessible
@@ -72,8 +92,15 @@
         }
     }
     
-    return setTimeout(function(){
-
+    function load(){
+        
+        count();
+        
+        //console.log(textarea.getClientRects());//.offsetWidth);
+    }
+    
+    function init(){
+    
         textarea = _p('textarea');
         ul = _p('ul');
         li = ul.getElementsByTagName('li');
@@ -82,13 +109,30 @@
         words = _p('words');
         rows = _p('textarea', 'rows');
         cols = _p('textarea', 'cols');
-        text = textarea.value;
       
         textarea.addEventListener(event, function(e){
             (!e)? count(window.event): count(e);          
         });
-
-        count();
-    }, 100);
+        
+        textarea.addEventListener('keyup', function(e){
+            
+            // generate short url 
+            var hashed = hash(textarea.value);
+            
+            // after you stop typing for few seconds
+            clearTimeout(typing);
+            
+            typing = setTimeout(function(){
+                window.history.pushState('', '', '/#' + hashed);
+            }, 2000);
+            
+        });
+        
+        load();
+    }
+    
+    return {
+        init: init
+    };
 
 })();

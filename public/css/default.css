@@ -1,5 +1,5 @@
 
-body { overflow: hidden; }
+body { overflow: auto; }
 .digitized { background-color: #efefef; padding: .6em; color: #fff; border-top: solid .5em #fff; color: #44af00 }
 .digitized strong { font-weight: normal; display: block; float: left; margin-bottom: .3em }
 .digitized .content, .digitized .title { display: block; width: 100%; clear: both; }
